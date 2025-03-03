@@ -1,0 +1,53 @@
+.schedule-table {
+  margin: 20px 0;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  max-width: 600px;
+}
+
+.day-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.day-item.selected {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.time-inputs {
+  margin-top: 10px;
+  display: none;
+}
+
+.time-inputs.visible {
+  display: block;
+}
+
+.time-input {
+  margin: 5px 0;
+}
+
+#jsonOutput {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+}
+
+.timezone-select {
+  margin-top: 20px;
+}
+
+#status {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #f4f4f4;
+}
