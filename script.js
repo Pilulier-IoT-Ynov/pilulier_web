@@ -77,17 +77,41 @@ document.getElementById('scheduleForm').addEventListener('submit', async (event)
   };
   
   // Affichage du JSON
-  const jsonOutput = document.getElementById('jsonOutput');
-  jsonOutput.textContent = JSON.stringify(data, null, 2);
+  // const jsonOutput = document.getElementById('jsonOutput');
+  // jsonOutput.textContent = JSON.stringify(data, null, 2);
 
   // Envoi via Bluetooth
   const encoder = new TextEncoder();
   const encodedData = encoder.encode(JSON.stringify(data));
-  
+
+  if (!characteristic) {
+    alert('Erreur: Non connecté à l\'ESP32');
+    return;
+  }
+
   try {
     await characteristic.writeValue(encodedData);
     alert('Données envoyées');
   } catch (error) {
     console.error('Erreur lors de l\'envoi des données', error);
+  }
+});
+
+document.getElementById('syncTime').addEventListener('click', async () => {
+  if (!characteristic) {
+    alert('Erreur: Non connecté à l\'ESP32');
+    return;
+  }
+
+  const currentTime = new Date().toISOString();
+  const encoder = new TextEncoder();
+  const encodedTime = encoder.encode(JSON.stringify({ currentTime }));
+
+  try {
+    await characteristic.writeValue(encodedTime);
+    alert(`Heure synchronisée: ${currentTime}`);
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation de l\'heure', error);
+    alert('Erreur lors de la synchronisation de l\'heure');
   }
 });

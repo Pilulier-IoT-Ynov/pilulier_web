@@ -7,7 +7,9 @@
 </head>
 <body>
   <h1>Connexion Bluetooth avec ESP32</h1>
+  <a href="#" id="openConfig">Modifier la configuration</a><br><br>
   <button id="connect">Se connecter à l'ESP32</button>
+  <button id="syncTime">Synchroniser l'heure</button>
   <div id="status">Statut: Non connecté</div>
   
     <div class="timezone-select">
@@ -101,8 +103,26 @@
     <button type="submit">Envoyer</button>
   </form>
 
-  <pre id="jsonOutput"></pre>
+  <!-- <pre id="jsonOutput"></pre> -->
+
+  <div id="configPopup" class="popup">
+    <div class="popup-content">
+      <span class="close">&times;</span>
+      <h1>Modifier la configuration</h1>
+      <pre id="currentConfig"></pre>
+      <form id="configForm">
+        <label for="deviceName">Nom de l'appareil:</label>
+        <input type="text" id="deviceName" name="deviceName"><br><br>
+        <label for="serviceUUID">Service UUID:</label>
+        <input type="text" id="serviceUUID" name="serviceUUID"><br><br>
+        <label for="characteristicUUID">Characteristic UUID:</label>
+        <input type="text" id="characteristicUUID" name="characteristicUUID"><br><br>
+        <button type="submit">Enregistrer</button>
+      </form>
+    </div>
+  </div>
 
   <script src="script.js"></script>
+  <script src="config_edit.js"></script>
 </body>
 </html>
