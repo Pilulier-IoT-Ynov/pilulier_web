@@ -9,6 +9,48 @@ function updateStatus(message) {
   statusElement.textContent = `Statut: ${message}`;
 }
 
+async function verifyConnection() {
+  if (!bluetoothDevice || !bluetoothDevice.gatt.connected) {
+    updateStatus('Non connecté');
+    return false;
+  }
+  try {
+    const testService = await gattServer.getPrimaryService(CONFIG.serviceUUID);
+    const testCharacteristic = await testService.getCharacteristic(CONFIG.characteristicUUID);
+    await testCharacteristic.readValue();
+    updateStatus('Connecté à l\'ESP32');
+    return true;
+  } catch (error) {
+    updateStatus('Erreur de connexion');
+    console.error('Erreur de connexion', error);
+    return false;
+  }
+}
+
+async function listBluetoothDevices() {
+  try {
+    const devices = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: [CONFIG.serviceUUID]
+    });
+    console.log('Appareils Bluetooth disponibles:', devices);
+    alert(`Appareils Bluetooth disponibles: ${devices.name}`);
+  } catch (error) {
+    console.error('Erreur lors de la recherche des appareils Bluetooth', error);
+    alert('Erreur lors de la recherche des appareils Bluetooth');
+  }
+}
+
+function disconnectBluetooth() {
+  if (bluetoothDevice && bluetoothDevice.gatt.connected) {
+    bluetoothDevice.gatt.disconnect();
+    updateStatus('Déconnecté');
+    alert('Déconnecté de l\'ESP32');
+  } else {
+    alert('Aucun appareil connecté');
+  }
+}
+
 // Gestionnaire de connexion Bluetooth (identique)
 document.getElementById('connect').addEventListener('click', async () => {
   updateStatus('En attente de connexion...');
@@ -66,26 +108,27 @@ document.getElementById('scheduleForm').addEventListener('submit', async (event)
       schedule[day] = times;
     }
   });
-  
-  // Récupération de la timezone
-  const timezone = document.getElementById('timezone').value;
+
   
   // Création de l'objet final
+  const currentTime = new Date().toISOString();
+  const daysOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+  const currentDay = daysOfWeek[new Date().getDay()];
   const data = {
-    timezone: timezone,
+    currentDay: currentDay,
+    datetime: currentTime,
     schedule: schedule
   };
   
   // Affichage du JSON
-  // const jsonOutput = document.getElementById('jsonOutput');
-  // jsonOutput.textContent = JSON.stringify(data, null, 2);
+  const jsonOutput = document.getElementById('jsonOutput');
+  jsonOutput.textContent = JSON.stringify(data, null, 2);
 
   // Envoi via Bluetooth
   const encoder = new TextEncoder();
   const encodedData = encoder.encode(JSON.stringify(data));
 
-  if (!characteristic) {
-    alert('Erreur: Non connecté à l\'ESP32');
+  if (!await verifyConnection()) {
     return;
   }
 
@@ -98,12 +141,13 @@ document.getElementById('scheduleForm').addEventListener('submit', async (event)
 });
 
 document.getElementById('syncTime').addEventListener('click', async () => {
-  if (!characteristic) {
-    alert('Erreur: Non connecté à l\'ESP32');
+  if (!await verifyConnection()) {
     return;
   }
 
   const currentTime = new Date().toISOString();
+  const jsonOutput = document.getElementById('jsonOutput');
+  jsonOutput.textContent = JSON.stringify(currentTime, null, 2);
   const encoder = new TextEncoder();
   const encodedTime = encoder.encode(JSON.stringify({ currentTime }));
 
@@ -114,4 +158,15 @@ document.getElementById('syncTime').addEventListener('click', async () => {
     console.error('Erreur lors de la synchronisation de l\'heure', error);
     alert('Erreur lors de la synchronisation de l\'heure');
   }
+});
+
+// Ajouter un bouton pour lister les appareils Bluetooth disponibles
+document.getElementById('listDevices').addEventListener('click', listBluetoothDevices);
+
+// Ajouter un bouton pour déconnecter le Bluetooth
+document.getElementById('disconnect').addEventListener('click', () => {
+  disconnectBluetooth();
+  const jsonOutput = document.getElementById('jsonOutput');
+  const currentTime = new Date().toISOString();
+  jsonOutput.textContent = JSON.stringify(currentTime, null, 2);
 });

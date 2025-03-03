@@ -9,39 +9,10 @@
   <h1>Connexion Bluetooth avec ESP32</h1>
   <a href="#" id="openConfig">Modifier la configuration</a><br><br>
   <button id="connect">Se connecter à l'ESP32</button>
+  <button id="disconnect">Déconnecter</button>
   <button id="syncTime">Synchroniser l'heure</button>
+  <button id="listDevices">Lister les appareils Bluetooth disponibles</button>
   <div id="status">Statut: Non connecté</div>
-  
-    <div class="timezone-select">
-      <h3>Sélection de la timezone :</h3>
-      <select id="timezone">
-      <option value="UTC-12">UTC-12</option>
-      <option value="UTC-11">UTC-11</option>
-      <option value="UTC-10">UTC-10</option>
-      <option value="UTC-9">UTC-9</option>
-      <option value="UTC-8">UTC-8</option>
-      <option value="UTC-7">UTC-7</option>
-      <option value="UTC-6">UTC-6</option>
-      <option value="UTC-5">UTC-5</option>
-      <option value="UTC-4">UTC-4</option>
-      <option value="UTC-3">UTC-3</option>
-      <option value="UTC-2">UTC-2</option>
-      <option value="UTC-1">UTC-1</option>
-      <option value="UTC+0">UTC±0</option>
-      <option value="UTC+1" selected>UTC+1</option>
-      <option value="UTC+2">UTC+2</option>
-      <option value="UTC+3">UTC+3</option>
-      <option value="UTC+4">UTC+4</option>
-      <option value="UTC+5">UTC+5</option>
-      <option value="UTC+6">UTC+6</option>
-      <option value="UTC+7">UTC+7</option>
-      <option value="UTC+8">UTC+8</option>
-      <option value="UTC+9">UTC+9</option>
-      <option value="UTC+10">UTC+10</option>
-      <option value="UTC+11">UTC+11</option>
-      <option value="UTC+12">UTC+12</option>
-      </select>
-    </div>
 
   <form id="scheduleForm">
     <div class="schedule-table">
@@ -103,7 +74,7 @@
     <button type="submit">Envoyer</button>
   </form>
 
-  <!-- <pre id="jsonOutput"></pre> -->
+  <pre id="jsonOutput"></pre>
 
   <div id="configPopup" class="popup">
     <div class="popup-content">
