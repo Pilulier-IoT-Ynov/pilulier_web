@@ -112,11 +112,22 @@ document.getElementById('scheduleForm').addEventListener('submit', async (event)
   
   // Création de l'objet final
   const currentTime = new Date().toISOString();
+  const [date, time] = currentTime.split('T');
+  const [year, month, day] = date.split('-');
+  const [hours, minutes, seconds] = time.split(':');
   const daysOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   const currentDay = daysOfWeek[new Date().getDay()];
   const data = {
     currentDay: currentDay,
     datetime: currentTime,
+    monday: schedule['Lundi'],    
+    tuesday: schedule['Mardi'],
+    wednesday: schedule['Mercredi'],
+    thursday: schedule['Jeudi'],
+    friday: schedule['Vendredi'],
+    saturday: schedule['Samedi'],
+    sunday: schedule['Dimanche'],
+    date: [year, month, day, hours, minutes, seconds.split('.')[0]],
     schedule: schedule
   };
   
